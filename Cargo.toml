@@ -1,0 +1,12 @@
+[package]
+name = "mozika_scraper_rust"
+version = "0.1.0"
+authors = ["Mariot Tsitoara <mariot.tsitoara@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+reqwest = "0.9.4"
+select = "0.4.2"
+clap = "2.27.0"
+postgres = "0.15"
+indicatif = "0.10.2"
