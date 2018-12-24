@@ -29,12 +29,24 @@ fn main() {
                 .required(true)
                 .help("Page number when scraping artists. Artist ID when scraping songs"),
         )
+        .arg(
+            Arg::with_name("last_page")
+                .short("l")
+                .long("last_page")
+                .takes_value(true)
+                .help("Last page number to scrap"),
+        )
         .get_matches();
 
     let page_type = matches.value_of("type").unwrap_or("song");
-    let page_num: i32 = matches
+    let mut page_num: i32 = matches
         .value_of("page")
         .unwrap_or("0")
+        .parse()
+        .expect("Page number invalid");
+    let last_page_num: i32 = matches
+        .value_of("last_page")
+        .unwrap_or("-1")
         .parse()
         .expect("Page number invalid");
 
@@ -48,8 +60,7 @@ fn main() {
     let insert_song_stmt = conn.prepare("INSERT INTO scraper_song(title, lyrics, artist_id, hits, url) VALUES ($1, $2, $3, $4, $5);").unwrap();
 
     match page_type {
-        "artist" => {
-            println!("Searching for artists in page {}", page_num);
+        "artist" => loop {
             let artists = scrap_artists(page_num * 20);
 
             for artist in &artists {
@@ -71,7 +82,12 @@ fn main() {
                         .unwrap();
                 }
             }
-        }
+
+            page_num += 1;
+            if page_num > last_page_num {
+                break;
+            }
+        },
         "song" => {
             println!("Searching for songs with artist ID {}", page_num);
         }

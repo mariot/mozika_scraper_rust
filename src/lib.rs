@@ -96,7 +96,7 @@ fn get_songs_page_infos(url: &str) -> Vec<Song> {
         let lyrics = get_song_lyrics(&url);
         if lyrics.is_empty() {
             println!("[!!!] Could not parse: {}", url);
-			continue;
+            continue;
         }
 
         songs.push(Song {
@@ -118,17 +118,20 @@ fn get_song_lyrics(url: &str) -> String {
 
     match Document::from_read(resp) {
         Ok(document) => {
-            let lyrics_html = document
-                .find(Class("l-2-3"))
-                .next()
-                .unwrap()
-                .children()
-                .filter(|child| child.is(Text))
-                .map(|node| node.text());
+            let lyrics_node = document.find(Class("l-2-3")).next();
+            if lyrics_node != None {
+                let lyrics_html = lyrics_node
+                    .unwrap()
+                    .children()
+                    .filter(|child| child.is(Text))
+                    .map(|node| node.text());
 
-            for lyrics_line in lyrics_html {
-                let line_to_add = lyrics_line.as_str().trim().to_string() + "\n";
-                lyrics.push_str(&line_to_add.as_str());
+                for lyrics_line in lyrics_html {
+                    let line_to_add = lyrics_line.as_str().trim().to_string() + "\n";
+					if line_to_add != "\n\n" {
+                    	lyrics.push_str(&line_to_add.as_str());
+					}
+                }
             }
         }
         Err(_) => {
