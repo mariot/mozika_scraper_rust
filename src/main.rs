@@ -10,7 +10,7 @@ use postgres::{Connection, TlsMode};
 
 fn main() {
     let matches = App::new("Mozika Scraper")
-        .version("0.1.0")
+        .version("0.1.1")
         .author("Mariot Tsitoara <mariot.tsitoara@gmail.com>")
         .about("Scrap Lyrics with Rust")
         .arg(
@@ -39,7 +39,7 @@ fn main() {
         .expect("Page number invalid");
 
     let conn = Connection::connect(
-        "postgresql://mozikauser:zelda@localhost:5432/mozika",
+        "postgresql://mozikauser:zelda@localhost:5432/mozikarust",
         TlsMode::None,
     )
     .unwrap();
@@ -64,7 +64,7 @@ fn main() {
                     .unwrap();
                 let id: i32 = rows.get(0).get("id");
 
-                let songs = scrap_songs(artist.songs_id, artist.number_of_songs);
+                let songs = scrap_songs(artist.songs_id);
                 for song in songs {
                     insert_song_stmt
                         .execute(&[&song.title, &song.lyrics, &id, &0i32, &song.url])

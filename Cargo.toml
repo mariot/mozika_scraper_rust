@@ -1,12 +1,18 @@
 [package]
 name = "mozika_scraper_rust"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Mariot Tsitoara <mariot.tsitoara@gmail.com>"]
 edition = "2018"
+license = "MIT"
+description = "Scrap lyrics with Rust"
+readme = "README.md"
+homepage = "https://github.com/you/mozika_scarper_rust"
+repository = "https://github.com/mariot/mozika_scarper_rust"
+keywords = ["tononkira", "lyrics", "scrap"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 reqwest = "0.9.4"
 select = "0.4.2"
-clap = "2.27.0"
+clap = "2.32.0"
 postgres = "0.15"
-indicatif = "0.10.2"
